@@ -1,0 +1,62 @@
+factor_evaluator:
+  cache_data_path: /mnt/data/quant_data/factor_data
+  univ_data_path: /mnt/data/quant_data/stock_universe/
+  target_univ: "stock_universe"
+  start_date: "2023-01-01"
+  end_date: "2024-01-01"
+  max_parallel: 40
+  target_exec_time_point:
+    - "10:00"
+    - "11:00"
+    - "13:00"
+    - "14:00"
+  price_type:
+    - "1m_twap"
+    - "1m_vwap"
+    - "5m_vwap"
+    - "10m_vwap"
+    - "30m_vwap"
+    - "to_close_vwap"
+  clickhouse_layer:
+    host: data_chdb.shifengamc.com
+    port: "9000"
+    user: "zyzhang"
+    password: "In9SEts5T65g"
+
+eval_job:
+  factor_data_path: /mnt/datadisk2/aglv/foraglv/asymmetric_factors/aglv_factor
+  output_dir: /mnt/datadisk2/aglv/foraglv/asymmetric_factors/aglv_factor_test
+  num_grp_pnl: 10
+  num_grp_ic: 5
+  factor_name:
+    # - "factor_skew_20_21"
+    # - "factor_asymp"
+    # - "factor_CVaR_neg"
+    # - "factor_CVaR_posi"
+    # - "factor_skew_power"
+    # - "factor_skew_linear_power"
+    # - "skew_ratio"
+    # - "CVaR_posi_0.9_standard"
+    # - "CVaR_neg_standard_210101_230101_r30"
+    # - "CVaR_neg_210101_230101_r30"
+    # - "asymp_210101_230101_r30"
+    # - "asymp_zs_210101_230101_r30"
+    # - 'asymp_zs_210101_230101_r60'
+    # - 'asymp_210101_230101_r60'
+    # - "asymp_spe_210101_230101_r30"
+    # - "asymp_spe_zs_210101_230101_r30"
+    # - "asymp_spe_200101_210101_r30"
+    # - "asymp_spe_zs_200101_210101_r30"
+    # - 'CVaR_neg_0.8_zs_210101_230101_r30'
+    # - 'CVaR_neg_0.8_210101_230101_r30'
+    # -  'CVaR_posi_0.9_zs_230101_240101_r30'
+    # -  'CVaR_posi_0.9_230101_240101_r30'
+    - 'CVaR_posi_0.9_ratio_zs_230101_240101_r30'
+  delay_days:
+    - 1
+    - 3
+    - 5
+    - 10
+
+#  run_evaljob_local /mnt/datadisk2/aglv/foraglv/asymmetric_factors/factor_test.yaml
+#  facteval-res-viewer /mnt/datadisk2/aglv/foraglv/asymmetric_factors/factor_test.yaml
