@@ -1,0 +1,14 @@
+
+
+*.h5
+*.so
+*.csv
+*.txt
+
+asymetric.ipynb
+DataDaily_demo.py
+DataDaily_index_new_demo.py
+DataDaily_style_demo.py
+DataMinute_vwap_demo.py
+DataMinute_vwap_index_demo.py
+
