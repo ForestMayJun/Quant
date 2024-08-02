@@ -3,17 +3,14 @@ import numpy as np
 import sys
 import os
 
-# sys.path.append('/mnt/datadisk2/aglv/foraglv/DataDaily.cpython-38-x86_64-linux-gnu.so')
-# sys.path.append('/mnt/datadisk2/aglv/foraglv/utils.cpython-38-x86_64-linux-gnu.so')
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from forintern.DataDaily import DataDaily
+# from forintern.utils import median_fill
 
-from DataDaily import DataDaily
-from utils import median_fill
 from multiprocessing import Pool
 import yaml
 from factor_daily import generate_onetime, out, factor_standarize
-from asymetric_alpha.utils import skewness, e_phi_series, s_phi_series, asym_p_series, cVaR_series
+from asymmetric_alpha.utils import skewness, e_phi_series, s_phi_series, asym_p_series, cVaR_series
 from tqdm import tqdm
 
 config_path = sys.argv[0].replace(".py", ".yaml")
@@ -79,7 +76,7 @@ class Config(object):
         #         res.iloc[i] = obj.skewness.f
 
         tqdm.pandas(desc='processing')
-        def rolling(data, f, window=30):
+        def rolling(data, f, window=45):
             '''
             pd.series -> pd.series,
             每个元素是rolling前window窗口 -> 

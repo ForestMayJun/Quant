@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<strategy>
+	<PARAMS>
+		<date></date>
+		<scale>30</scale>
+		<startdate>20210101</startdate>
+		<enddate>20230801</enddate>
+		<hedge>zz500</hedge>
+		<period>1</period>
+		<tradePrice>09:30</tradePrice>
+	</PARAMS>
+	<BACKTEST type="1">
+		<universe_all>./universe_today.csv</universe_all>
+		<universe>./universe_today.csv</universe>
+		<industry_control type="1">0</industry_control>
+		<pred_weight></pred_weight>
+		<pred>1</pred>
+		<pred_file>./pred_result_v4/pred_72_mix.csv</pred_file>
+		<pred_neutual>1</pred_neutual>
+		<thres>0</thres>
+		<weight_type>size</weight_type>
+		<backtest_start_date>20200101</backtest_start_date>
+		<backtest_end_date></backtest_end_date>
+		<beta_neutual>1</beta_neutual>
+	</BACKTEST>
+</strategy>

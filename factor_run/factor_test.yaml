@@ -24,8 +24,8 @@ factor_evaluator:
     password: "In9SEts5T65g"
 
 eval_job:
-  factor_data_path: /mnt/datadisk2/aglv/foraglv/asymmetric_factors/aglv_factor
-  output_dir: /mnt/datadisk2/aglv/foraglv/asymmetric_factors/aglv_factor_test
+  factor_data_path: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor
+  output_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor_test
   num_grp_pnl: 10
   num_grp_ic: 5
   factor_name:
@@ -51,12 +51,14 @@ eval_job:
     # - 'CVaR_neg_0.8_210101_230101_r30'
     # -  'CVaR_posi_0.9_zs_230101_240101_r30'
     # -  'CVaR_posi_0.9_230101_240101_r30'
-    - 'CVaR_posi_0.9_ratio_zs_230101_240101_r30'
+    # - 'CVaR_posi_0.9_ratio_zs_230101_240101_r30'
+    - 'CVaR_posi_0.9_230101_240601_r45'
+    - 'CVaR_posi_0.9_zs_230101_240601_r45'
   delay_days:
     - 1
     - 3
     - 5
     - 10
 
-#  run_evaljob_local /mnt/datadisk2/aglv/foraglv/asymmetric_factors/factor_test.yaml
-#  facteval-res-viewer /mnt/datadisk2/aglv/foraglv/asymmetric_factors/factor_test.yaml
+#  run_evaljob_local /mnt/datadisk2/aglv/aglv/lab_aglv/factor_run/factor_test.yaml
+#  facteval-res-viewer /mnt/datadisk2/aglv/aglv/lab_aglv/factor_run/factor_test.yaml

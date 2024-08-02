@@ -1,4 +1,4 @@
-factor_minue_dir: /mnt/datadisk2/aglv/foraglv/asymmetric_factors/aglv_factor
+factor_minue_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor
 factor_dir: ./factor/
 factor_names: [1,1]
 factor_names_normal: factor0

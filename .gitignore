@@ -4,7 +4,12 @@
 *.so
 *.csv
 *.txt
+*test*
+*aag*
 
+*.ipynb
+
+aag
 asymetric.ipynb
 DataDaily_demo.py
 DataDaily_index_new_demo.py
