@@ -15,7 +15,14 @@ def log_return(df:pd.DataFrame):
 
     return log_ratio
 
+def over_to_normal(df:pd.DataFrame):
+    '''假设series服从标准正态分布,将大于2的值归于0'''
+    df[df > 2] = 0
+    df[df < -2] = 0
+    return df
+
 if __name__ == '__main__':
-    s1 = pd.Series([2, np.nan, 6, 3, np.nan])
-    print(log_return(s1))
-    # print(np.log(3))
+    df = pd.DataFrame([[2, np.nan, 6, 3, np.nan],
+                       [4, 7, 0, 1, 2]])
+    # print(log_return(s1))
+    print(over_to_normal(df))

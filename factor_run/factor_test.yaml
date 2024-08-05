@@ -2,8 +2,8 @@ factor_evaluator:
   cache_data_path: /mnt/data/quant_data/factor_data
   univ_data_path: /mnt/data/quant_data/stock_universe/
   target_univ: "stock_universe"
-  start_date: "2023-01-01"
-  end_date: "2024-06-01"
+  start_date: "2021-01-01"
+  end_date: "2023-01-01"
   max_parallel: 40
   target_exec_time_point:
     - "10:00"
@@ -56,7 +56,9 @@ eval_job:
     # - 'CVaR_posi_0.9_zs_230101_240601_r45'
     # - 'CVaR_posi_0.9_abs_230101_240601_r45'
     # - 'CVaR_posi_0.9_abs_230101_240101_r30'
-
+    # - 'CVaR_neg_0.9_logreturn_zs_230101_240101_r30'
+    # - 'CVaR_neg_0.9_logreturn_230101_240101_r30'
+    # - 'CVaR_neg_zs_axis1_210101_230101_r30'
   delay_days:
     - 1
     - 3

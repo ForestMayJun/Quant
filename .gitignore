@@ -7,7 +7,7 @@
 *test*
 *aag*
 
-*.ipynb
+# *.ipynb
 
 aag
 asymetric.ipynb
