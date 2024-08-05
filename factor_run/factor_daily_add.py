@@ -9,9 +9,10 @@ from forintern.DataDaily import DataDaily
 
 from multiprocessing import Pool
 import yaml
+from tqdm import tqdm
 from factor_daily import generate_onetime, out, factor_standarize
 from asymmetric_alpha.utils import skewness, e_phi_series, s_phi_series, asym_p_series, cVaR_series
-from tqdm import tqdm
+from factor_utils import log_return
 
 config_path = sys.argv[0].replace(".py", ".yaml")
 config = yaml.load(open(config_path),Loader=yaml.SafeLoader)
@@ -40,7 +41,10 @@ class Config(object):
         end_date = cfg.end_date
         # open_ = data.adjopen.loc[start_date:end_date, u]
         close = data.adjclose.loc[start_date:end_date, u]
-        close_pct = close.pct_change().fillna(0)
+        close_log = log_return(close)
+        # close_pct = close.pct_change().fillna(0)
+        # close_pct_log = 
+        
         # high = data.adjhigh.loc[start_date:end_date, u]
         # low = data.adjlow.loc[start_date:end_date, u]
         # volume = data.volume.loc[start_date:end_date, u]
@@ -76,7 +80,7 @@ class Config(object):
         #         res.iloc[i] = obj.skewness.f
 
         tqdm.pandas(desc='processing')
-        def rolling(data, f, window=45):
+        def rolling(data, f, window=30):
             '''
             pd.series -> pd.series,
             每个元素是rolling前window窗口 -> 
@@ -91,7 +95,7 @@ class Config(object):
         # factor1 = close_pct.rolling(30).progress_apply(lambda x: cVaR_series(x)[0])
         # factor1 = close_pct.progress_apply(lambda x: rolling(x, cVaR_series))
         # factor1 = close_pct.rolling(30).progress_apply(skewness_power)
-        factor1 = close_pct.progress_apply(lambda x : rolling(x, cVaR_series))
+        factor1 = close_log.progress_apply(lambda x : rolling(x, cVaR_series))
 
         p = Pool(min(64, len(cfg.factor_names)))
         for factor_name, name in zip(cfg.factor_names, cfg.factor_names_stand):

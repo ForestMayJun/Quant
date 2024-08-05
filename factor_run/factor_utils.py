@@ -1,26 +1,21 @@
+'''因子计算工具'''
 import pandas as pd
 import numpy as np
+import sys
+import os
 
-window = 30
-decay_rate = 0.95
-# weight = np.array([np.power(decay_rate, window - i) for i in range(window)])
-weight = np.array([range(1, 31, 1)])
-weight_sum = np.sum(weight)
-def skewness_power(x, weight=weight, weight_sum=weight_sum):
-    y = (x - x.mean()) / (x.std() + 1e-10)
-    y = np.power(y, 3)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from forintern.DataDaily import DataDaily
 
-    return np.dot(weight, y.values) / weight_sum
+def log_return(df:pd.DataFrame):
+    '''接受价格df对象,返回对数收益率'''
+    df = df.fillna(method='ffill')
+    ratio = df.pct_change() + 1
+    log_ratio = np.log(ratio).fillna(0)
 
+    return log_ratio
 
-def rolling(data, f, window=30):
-    '''
-    pd.series -> pd.series,
-    每个元素是rolling前window窗口 -> 
-    '''
-    res = pd.Series(index=data.index) # 储存数据 iloc[i]为i-window - i时间段的f的值，f:pd.series -> float
-    for i in range(window, len(data)):
-        res.iloc[i] = f(data.iloc[i-window:i])
-    
-    return res.fillna(0)
-
+if __name__ == '__main__':
+    s1 = pd.Series([2, np.nan, 6, 3, np.nan])
+    print(log_return(s1))
+    # print(np.log(3))

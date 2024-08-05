@@ -76,17 +76,23 @@ def asym_p_series(series):
 
     return stats.spearmanr(density_series, acc_series)[0]
 
-def cVaR_series(series, c_level=0.9):
+def cVaR_series(series, c_level=0.9, is_low=True):
+    '''
+    CVaR:分布的尾部积分, Parameters:
+    c_level:p值,默认0.9
+    is_low:返回的是否是左侧CVaR,=False时返回右侧,默认True
+    '''
     right_VaR = series.quantile(c_level)
-    # left_VaR = series.quantile(1- c_level)
+    left_VaR = series.quantile(1- c_level)
 
-    # X_low = pd.Series(series[series < left_VaR])
-    X_high = pd.Series(series[series > right_VaR])
-
-    # low_mean = X_low.mean() if len(X_low) > 0 else 0
-    high_mean = X_high.mean() if len(X_high) > 0 else 0
-
-    return -high_mean
+    if is_low:
+        X_low = pd.Series(series[series < left_VaR])
+        low_mean = X_low.mean() if len(X_low) > 0 else 0
+        return low_mean
+    else:
+        X_high = pd.Series(series[series > right_VaR])
+        high_mean = X_high.mean() if len(X_high) > 0 else 0
+        return -high_mean
     
 
 def rolling(data, f, window=60):
@@ -101,19 +107,31 @@ def rolling(data, f, window=60):
     return res.fillna(0)
 
 def clt_density(y):
+    '''中心极限定理下的估计密度函数'''
     def f(x):
         return stats.norm.pdf(x, loc=np.mean(y), scale=np.std(y))
     return f
 
 def clt_cdf(y):
+    '''中心极限定理下的估计分布函数'''
     def f(x):
         return stats.norm.cdf(x, loc=np.mean(y), scale=np.std(y))
     return f
 
 def skewness_power(x, window=30, decay_rate=0.95):
+    '''带加权值的skew'''
     y = (x - x.mean()) / (x.std() + 1e-10)
     weight = np.array([np.power(decay_rate, window - i) for i in range(window)])
     return np.dot(weight, y.values) / np.sum(weight)
+
+def skew_scale(series:pd.Series, scale_por=0.9):
+    '''去掉极值后的skew, scale_por:剩下数据数量/原始数据数量'''
+    low =  series.quantile((1-scale_por)/2)
+    high = series.quantile(0.5 + scale_por/2)
+
+    series = series[(series >= low) & (series <= high)]
+
+    return series.skew()
 
 if __name__ == '__main__':
     X = pd.DataFrame()
@@ -132,7 +150,9 @@ if __name__ == '__main__':
     # print('s_phi')
     # print(asymetric.s_phi())
     # print('asym_p')
-    print(X.rolling(30).apply(asym_p_series))
+    print(X.rolling(30).apply(skew_scale))
+    print(X.rolling(30).apply(lambda x: x.skew()))
+    
     # print('cVaR:')
     # print(asymetric.cVaR())
     # print(X.apply(lambda x: rolling(x, e_phi_series)))
