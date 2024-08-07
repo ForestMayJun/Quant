@@ -7,6 +7,9 @@ import numpy as np
 import scipy.integrate as integrate
 import scipy.stats as stats
 from tqdm import tqdm
+from scipy.stats import gaussian_kde
+from scipy.special import comb
+from scipy.special import roots_chebyt
     
 def skewness(series):
     '''self.X序列的偏度: 标准化后的三阶中心矩'''
@@ -40,8 +43,8 @@ def e_phi_series(series):
 
     return right_inte - left_inte
 
-def s_phi_series(series):
-    k = series.quantile(0.9)
+def s_phi_series(series, k=0.9):
+    k_value = series.quantile(k)
     sign = np.sign(e_phi_series(series))
 
     def diff_func(f_1, f_2):
@@ -50,11 +53,34 @@ def s_phi_series(series):
             return np.power(np.power(f_1(x), 1/2) - np.power(f_2(x), 1/2), 2)
         return f
 
-    f_1 = kernel_density(series)
-    f_2 = kernel_density(-series + 2*series.mean())
+    f_1 = gaussian_kde(series)
+    f_2 = gaussian_kde(-series + 2*series.mean())
     diff_f = diff_func(f_1, f_2)
 
     return sign * 1/2 * (integrate.quad(diff_f, -np.inf, -k)[0] + integrate.quad(diff_f, k, np.inf)[0])
+
+def s_phi_series_version2(series, k=0.6):
+
+    sign = np.sign(series.skew())
+
+    def diff_func(f_1, f_2):
+        '''积分辅助函数'''
+        def f(x):
+            return np.power(np.power(f_1(x), 1/2) - np.power(f_2(x), 1/2), 2)
+        return f
+    
+    series = np.array(series)
+    epsilon = 1e-10
+    series += epsilon * np.random.randn(len(series))
+
+    f_1 = gaussian_kde(series)
+    f_2 = gaussian_kde(-series + 2*series.mean())
+    diff_f = diff_func(f_1, f_2)
+    diff_series = diff_f(series)
+    diff_series = pd.Series(diff_series)
+    k_value = diff_series.quantile(k)
+
+    return sign * diff_series[diff_series > k_value].mean()
 
 
 def asym_p_series(series):
@@ -133,6 +159,39 @@ def skew_scale(series:pd.Series, scale_por=0.9):
 
     return series.skew()
 
+def l_moments(series:pd.Series):
+    sorted_series = series.sort_values()
+    n = len(series)
+    weight2 = np.array([2*i - n - 1 for i in range(1, n+1)])
+    weight3= np.array([comb(i-1, 2) - 2*(i-1)*(n-1) + comb(n-i, 2) for i in range(1, n+1)])
+
+    l_2 = 1 / (n*(n-1)) * np.dot(weight2, sorted_series)
+    l_3 = 1 / (3*comb(n, 3)) * np.dot(weight3, sorted_series)
+
+    return l_3 / l_2
+
+def asym_p_version2(series):
+    low_bound = -10
+    n_samples = 30
+    samples = np.arange(-1, 1, 2/(n_samples))
+
+    epslion = 1e-10
+    series += epslion * np.random.randn(len(series))
+    f = gaussian_kde(series)
+    f_array = f(samples)
+
+    def g(f, a, b):
+        def lambda_func(x):
+            return (b-a) / 2 * f((b-a)*x/2 + (b+a)/2)
+        
+        return lambda_func
+    
+    nodes, weights = roots_chebyt(n_samples)
+    F_array = np.array([np.sum(weights * g(f, low_bound, sample)(nodes)) for sample in samples])
+    return np.corrcoef(f_array, F_array)[0][1]
+    
+
+    
 if __name__ == '__main__':
     X = pd.DataFrame()
     X['b'] = pd.Series(np.exp(2 * np.random.rand(100) - 1) -1)
@@ -146,12 +205,14 @@ if __name__ == '__main__':
     # print('skewness:')
     # print(asymetric.skewness())
     # print('e_phi:')
-    # print(asymetric.e_phi())
+    # print(X.rolling(30).apply(e_phi_series))
     # print('s_phi')
     # print(asymetric.s_phi())
     # print('asym_p')
     print(X.rolling(30).apply(skew_scale))
-    print(X.rolling(30).apply(lambda x: x.skew()))
+    # print(X.rolling(30).apply(s_phi_series_version2))
+    # print(X.rolling(30).apply(l_moments))
+    print(X.rolling(30).apply(asym_p_version2))
     
     # print('cVaR:')
     # print(asymetric.cVaR())

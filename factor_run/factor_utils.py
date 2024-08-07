@@ -7,6 +7,17 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from forintern.DataDaily import DataDaily
 
+def rolling(data, f, window=30):
+    '''
+    pd.series -> pd.series,
+    每个元素是rolling前window窗口 -> 
+    '''
+    res = pd.Series(index=data.index) # 储存数据 iloc[i]为i-window - i时间段的f的值，f:pd.series -> float
+    for i in range(window, len(data)):
+        res.iloc[i] = f(data.iloc[i-window:i])
+    
+    return res
+
 def log_return(df:pd.DataFrame):
     '''接受价格df对象,返回对数收益率'''
     df = df.fillna(method='ffill')

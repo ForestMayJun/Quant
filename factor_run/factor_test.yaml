@@ -2,21 +2,21 @@ factor_evaluator:
   cache_data_path: /mnt/data/quant_data/factor_data
   univ_data_path: /mnt/data/quant_data/stock_universe/
   target_univ: "stock_universe"
-  start_date: "2021-01-01"
-  end_date: "2023-01-01"
+  start_date: "2023-01-01"
+  end_date: "2024-01-01"
   max_parallel: 40
   target_exec_time_point:
     - "10:00"
-    - "11:00"
-    - "13:00"
+    # - "11:00"
+    # - "13:00"
     - "14:00"
   price_type:
     - "1m_twap"
     - "1m_vwap"
     - "5m_vwap"
-    - "10m_vwap"
+    # - "10m_vwap"
     - "30m_vwap"
-    - "to_close_vwap"
+    # - "to_close_vwap"
   clickhouse_layer:
     host: data_chdb.shifengamc.com
     port: "9000"
@@ -59,11 +59,20 @@ eval_job:
     # - 'CVaR_neg_0.9_logreturn_zs_230101_240101_r30'
     # - 'CVaR_neg_0.9_logreturn_230101_240101_r30'
     # - 'CVaR_neg_zs_axis1_210101_230101_r30'
+    # - 's_phi_v2_230101_240101_r30'
+    # - 's_phi_v2_zs_230101_240101_r30'
+    # - 's_phi_v2_zs2_230101_240101_r30'
+    # - 's_phi_v2_0.6_230101_240101_r30'
+    # - 'skew_scale_0.9_230101_240101_r30'
+    # - 'skew_230101_240101_r30'
+    # - 'l_monments_230101_240101_r30'
+    - 'asymp_version2_30p_-1_1_230101_240101_r30'
+
   delay_days:
     - 1
-    - 3
+    # - 3
     - 5
-    - 10
+    # - 10
 
 #  run_evaljob_local /mnt/datadisk2/aglv/aglv/lab_aglv/factor_run/factor_test.yaml
 #  facteval-res-viewer /mnt/datadisk2/aglv/aglv/lab_aglv/factor_run/factor_test.yaml

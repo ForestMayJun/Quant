@@ -11,7 +11,8 @@ from multiprocessing import Pool
 import yaml
 from tqdm import tqdm
 from factor_daily import generate_onetime, out, factor_standarize
-from asymmetric_alpha.utils import skewness, e_phi_series, s_phi_series, asym_p_series, cVaR_series
+from asymmetric_alpha.utils import skewness, e_phi_series, s_phi_series, asym_p_series, cVaR_series, s_phi_series_version2, skew_scale
+from asymmetric_alpha.utils import l_moments, asym_p_version2
 from factor_utils import log_return
 
 config_path = sys.argv[0].replace(".py", ".yaml")
@@ -41,9 +42,8 @@ class Config(object):
         end_date = cfg.end_date
         # open_ = data.adjopen.loc[start_date:end_date, u]
         close = data.adjclose.loc[start_date:end_date, u]
-        close_log = log_return(close)
-        # close_pct = close.pct_change().fillna(0)
-        # close_pct_log = 
+        # close_log = log_return(close)
+        close_pct = close.pct_change().fillna(0)
         
         # high = data.adjhigh.loc[start_date:end_date, u]
         # low = data.adjlow.loc[start_date:end_date, u]
@@ -80,22 +80,8 @@ class Config(object):
         #         res.iloc[i] = obj.skewness.f
 
         tqdm.pandas(desc='processing')
-        def rolling(data, f, window=30):
-            '''
-            pd.series -> pd.series,
-            每个元素是rolling前window窗口 -> 
-            '''
-            res = pd.Series(index=data.index) # 储存数据 iloc[i]为i-window - i时间段的f的值，f:pd.series -> float
-            for i in range(window, len(data)):
-                res.iloc[i] = f(data.iloc[i-window:i])
-            
-            return res
         
-        # factor1 = close_pct.progress_apply(lambda x: rolling(x, f=skewness))
-        # factor1 = close_pct.rolling(30).progress_apply(lambda x: cVaR_series(x)[0])
-        # factor1 = close_pct.progress_apply(lambda x: rolling(x, cVaR_series))
-        # factor1 = close_pct.rolling(30).progress_apply(skewness_power)
-        factor1 = close_log.progress_apply(lambda x : rolling(x, cVaR_series))
+        factor1 = close_pct.rolling(30).progress_apply(asym_p_version2)
 
         p = Pool(min(64, len(cfg.factor_names)))
         for factor_name, name in zip(cfg.factor_names, cfg.factor_names_stand):
