@@ -171,9 +171,10 @@ def l_moments(series:pd.Series):
     return l_3 / l_2
 
 def asym_p_version2(series):
-    low_bound = -10
-    n_samples = 30
-    samples = np.arange(-1, 1, 2/(n_samples))
+    low_bound = -5
+    n_samples = 40
+    left, right = -0.15, 0.15
+    samples = np.arange(left, right, (right - left)/n_samples)
 
     epslion = 1e-10
     series += epslion * np.random.randn(len(series))
@@ -187,7 +188,8 @@ def asym_p_version2(series):
         return lambda_func
     
     nodes, weights = roots_chebyt(n_samples)
-    F_array = np.array([np.sum(weights * g(f, low_bound, sample)(nodes)) for sample in samples])
+    F_array = np.array([np.sum(np.dot(weights, g(f, low_bound, sample)(nodes))) for sample in samples])
+
     return np.corrcoef(f_array, F_array)[0][1]
     
 

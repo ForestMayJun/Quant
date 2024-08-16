@@ -2,8 +2,8 @@ factor_evaluator:
   cache_data_path: /mnt/data/quant_data/factor_data
   univ_data_path: /mnt/data/quant_data/stock_universe/
   target_univ: "stock_universe"
-  start_date: "2023-01-01"
-  end_date: "2024-01-01"
+  start_date: "2021-01-01"
+  end_date: "2022-01-01"
   max_parallel: 40
   target_exec_time_point:
     - "10:00"
@@ -24,8 +24,8 @@ factor_evaluator:
     password: "In9SEts5T65g"
 
 eval_job:
-  factor_data_path: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor
-  output_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor_test
+  factor_data_path: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor/min_corr
+  output_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor_test/corr_min
   num_grp_pnl: 10
   num_grp_ic: 5
   factor_name:
@@ -66,7 +66,24 @@ eval_job:
     # - 'skew_scale_0.9_230101_240101_r30'
     # - 'skew_230101_240101_r30'
     # - 'l_monments_230101_240101_r30'
-    - 'asymp_version2_30p_-1_1_230101_240101_r30'
+    # - 'asymp_version2_30p_-1_1_230101_240101_r30'
+    # - 'asymp_v2_40p_-+0.1_230101_240101_r30'
+    # - 'asymp_v2_-+0.1_230101_240101_r30'
+
+    # - 'corr_1min_r5min_2021'
+    # - 'q_states_h10_min'
+    # - 'q_states_std_h10_step1_min'
+    # - 'q_states_std_h15_step2_min
+    # - 'skew_r5mean_min'
+    # - 'high_std_mean_sw10_mw5_stdp0.8_min'
+    # - 'high_std_mean_rm5_sw10_mw5_stdp0.8_min'
+    # - 'long_short_mw5_sm15_min'
+    # - 'long_short_rs5_min'
+    # - 'long_rs5_min'
+    # - 'conti_up_T50_min'
+    # - 'conti_down_T30_min'
+    # - 'conti_down_T30_r5mean_min'
+    - 'conti_down_T30_neg_min'
 
   delay_days:
     - 1

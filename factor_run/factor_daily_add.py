@@ -81,7 +81,7 @@ class Config(object):
 
         tqdm.pandas(desc='processing')
         
-        factor1 = close_pct.rolling(30).progress_apply(asym_p_version2)
+        factor1 = close_pct.rolling(15).progress_apply(lambda x : x.mean())
 
         p = Pool(min(64, len(cfg.factor_names)))
         for factor_name, name in zip(cfg.factor_names, cfg.factor_names_stand):
