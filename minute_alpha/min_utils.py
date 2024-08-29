@@ -5,6 +5,7 @@ from pathlib import Path
 from datetime import datetime, time, timedelta
 import sys
 import os
+import matplotlib.pyplot as plt
 
 sys.path.append('/mnt/datadisk2/aglv/aglv/lab_aglv')
 # from forintern.DataDaily import DataDaily
@@ -201,7 +202,7 @@ def conti_up_down_v1(price:pd.DataFrame, T=30, is_up=True):
     返回日内连续性涨跌幅,使用矩阵乘法,
     price:Multi-index对象,
     T:最大回溯窗口期,
-    is_up:True时计算涨幅, False时计算跌幅
+    is_up:True时计算涨幅, False时计算跌幅,
     '''
 
     A = np.triu(np.ones((T, T)))
@@ -220,7 +221,7 @@ def conti_up_down_v1(price:pd.DataFrame, T=30, is_up=True):
 
 def conti_up_down_v2(price: pd.DataFrame, T=30, is_up=True):
     '''
-    返回日内连续性涨跌幅,使用矩阵乘法,
+    返回日内连续性涨跌幅,使用卷积计算,
     price:Multi-index对象,
     T:最大回溯窗口期,
     is_up:True时计算涨幅, False时计算跌幅
@@ -247,24 +248,48 @@ def conti_up_down_v2(price: pd.DataFrame, T=30, is_up=True):
     
     return price.groupby(level='Date').progress_apply(_conti_up_down)
 
-def is_stop_trade(price:pd.DataFrame):
-    '''判断某只股票是否涨停跌停, 1为可以正常交易, 0为涨停跌停'''
+def is_stop_trade(price:pd.DataFrame, std_level=1e-6, back_period=-15, updown_level=0.08):
+    '''
+    判断某只股票是否涨停跌停, 1为可以正常交易, 0为涨停跌停 
+    price:分钟级价格数据, multi-index对象 
+    std_level:认为停止交易的数据标准差阈值 
+    back_period:回溯时间期, 单位min
+    updown_level:认为涨跌停幅度阈值
+    '''
 
     def _is_stop_trade(price_daily:pd.DataFrame):
         return pd.Series(np.where(
-            (price_daily.iloc[-15:].std() < 1e-6) & (np.abs(price_daily.iloc[-1] / price_daily.iloc[0]) - 1 > 0.08),
+            (price_daily.iloc[back_period:].std() < std_level) & (np.abs(price_daily.iloc[-1] / price_daily.iloc[0]) - 1 > updown_level),
             0, 1), index=price_daily.columns)
     
     return pd.DataFrame(price.groupby(level='Date').progress_apply(_is_stop_trade), columns=price.columns)
 
-def get_stop_stock(price:pd.DataFrame):
-    '''返回在某个日期涨停跌停的股票'''
+def get_stop_stock(price:pd.DataFrame, std_level=1e-6, back_period=-15, updown_level=0.08):
+    '''
+    返回在某个日期涨停跌停的股票
+    price:分钟级价格数据, multi-index对象 
+    std_level:认为停止交易的数据标准差阈值 
+    back_period:回溯时间期, 单位min
+    updown_level:认为涨跌停幅度阈值
+    '''
     
     def _get_stop_stock(price_daily:pd.DataFrame):
-        jg = (price_daily.iloc[-15:].std() < 1e-6) & (np.abs(price_daily.iloc[-1] / price_daily.iloc[0]) - 1 > 0.08)
+        jg = (price_daily.iloc[back_period:].std() < std_level) & (np.abs(price_daily.iloc[-1] / price_daily.iloc[0]) - 1 > updown_level)
         return jg[jg == True].index.to_list()
     
     return price.groupby(level='Date').progress_apply(_get_stop_stock)
+
+def show_idmax_plot(date_id, factor, price):
+    '''
+    查看因子值最大的股票的当日以及下一日的情况
+    f_idmax:因子数据factor.idxmax()
+    '''
+    f_idmax = factor.idxmax(axis=1)
+    stock= f_idmax.iloc[date_id]
+    data = price[stock][date_id*240-10:(date_id+2)*240+10].values
+    plt.plot(data)
+    plt.title(stock+'-'+f_idmax.index[date_id])
+    plt.show()
 
 
 if __name__ == '__main__':

@@ -81,7 +81,9 @@ class Config(object):
 
         tqdm.pandas(desc='processing')
         
-        factor1 = close_pct.rolling(15).progress_apply(lambda x : x.mean())
+        factor1 = close_pct.rolling(20).progress_apply(cVaR_series)
+        # factor2 = close_pct.rolling(30).progress_apply(cVaR_series)
+        # factor3 = close_pct.rolling(20).progress_apply(lambda x:cVaR_series(x, c_level=0.8))
 
         p = Pool(min(64, len(cfg.factor_names)))
         for factor_name, name in zip(cfg.factor_names, cfg.factor_names_stand):

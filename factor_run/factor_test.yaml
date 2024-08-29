@@ -3,7 +3,7 @@ factor_evaluator:
   univ_data_path: /mnt/data/quant_data/stock_universe/
   target_univ: "stock_universe"
   start_date: "2021-01-01"
-  end_date: "2022-01-01"
+  end_date: "2023-01-01"
   max_parallel: 40
   target_exec_time_point:
     - "10:00"
@@ -24,8 +24,8 @@ factor_evaluator:
     password: "In9SEts5T65g"
 
 eval_job:
-  factor_data_path: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor/min_corr
-  output_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor_test/corr_min
+  factor_data_path: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor/fa_21_23
+  output_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor_test/fa_21_23
   num_grp_pnl: 10
   num_grp_ic: 5
   factor_name:
@@ -83,7 +83,24 @@ eval_job:
     # - 'conti_up_T50_min'
     # - 'conti_down_T30_min'
     # - 'conti_down_T30_r5mean_min'
-    - 'conti_down_T30_neg_min'
+    # - 'conti_down_T30_neg_min'
+    # - 'conti_up_T50_min_dropstop'
+    # - 'skew_r5mean_min_dropstop'
+    # - 'extre_return_absmax_min'
+    # - 'extre_return_absmax_dropstop_min'
+    # - 'extre_return_absmax_dropstop_r5mean_min'
+    # - 'extre_return_absmax_1min__min'
+    # - 'extre_return_absmax_b1min_noabs_min'
+    # - 'extre_return_absmax_ba2min_noabs_min'
+
+    # - 'interday_cvar_neg_0.9_min' 
+    # - 'interday_cvar_neg_0.9_sft1_min'
+    # - 'interday_cvar_neg_0.9_2022_min'
+    # - 'conti_up_T30_2022_min'
+    # - 'longshort_v2_w15_min'
+    # - 'interday_cvar_neg_0.9_21_22_min'
+    # - 'conti_down_T30_2022_min'
+    - 'conti_down_T30_2021_min'
 
   delay_days:
     - 1
