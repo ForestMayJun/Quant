@@ -25,7 +25,7 @@ factor_evaluator:
 
 eval_job:
   factor_data_path: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor/factor_829
-  output_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor_test/fa_21_23
+  output_dir: /mnt/datadisk2/aglv/aglv/lab_aglv/aglv_factor_test/corr_min
   num_grp_pnl: 10
   num_grp_ic: 5
   factor_name:
@@ -107,7 +107,9 @@ eval_job:
     # - 'longshort_v3_vol_ret_w15_22_min'
     # - 'longshort_v3_vol_ret_w15_21_dropstop_min'
     # - 'inday_std_max_w15_21'
-    - 'interday_cvar_neg_0.9_21_23_min'
+    # - 'interday_cvar_neg_0.9_21_23_min'
+    # - 'longshort_v3_vol_ret_w15_21_23_min'
+    # - 'conti_up_T30_21_23_min'
 
 
   delay_days:
