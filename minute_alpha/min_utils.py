@@ -271,6 +271,17 @@ def conti_up_down_v2(price: pd.DataFrame, T=30, is_up=True):
     
     return price.groupby(level='Date').progress_apply(_conti_up_down)
 
+def inday_std_max(price:pd.DataFrame, window=15):
+    '''
+    日内给定窗口期的波动最大值, 窗口默认值为15分钟
+    '''
+    def _inday_std_max(daily_price:pd.DataFrame, w=window):
+        daily_ret = daily_price.pct_change()
+        
+        return daily_ret.rolling(w).std().max()
+    
+    return price.groupby(level='Date').progress_apply(_inday_std_max)
+
 def is_stop_trade(price:pd.DataFrame, std_level=1e-6, back_period=-15, updown_level=0.08):
     '''
     判断某只股票是否涨停跌停, 1为可以正常交易, 0为涨停跌停 
