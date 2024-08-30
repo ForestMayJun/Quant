@@ -1,3 +1,6 @@
+'''
+    分钟级别数据的价量量化工具函数
+'''
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
@@ -194,6 +197,26 @@ def long_short_return_v2(df:pd.DataFrame, window=5):
         data = data.pct_change().fillna(0)
         data_mean_sum = data.rolling(window).sum().fillna(0)
         return data_mean_sum.max() - data_mean_sum.min()
+    
+    return df.groupby(level='Date').progress_apply(_long_short_return)
+
+def long_short_return_v3(df:pd.DataFrame, window=15):
+    '''
+    日内单侧行情, 衡量多空博弈力量, 判断急涨急跌
+    df:行列均是Multiindex的df对象,列包含价格序列和成交量序列
+    '''
+    def _long_short_return(data:pd.DataFrame):
+        price = data.xs(key='Close', level='Type', axis=1)
+        ret = price.pct_change().fillna(0)
+        # data_mean_sum = ret.rolling(window).sum().fillna(0)
+
+        vol = data.xs(key='LastVolume', level='Type', axis=1)
+        vol_percent = vol / vol.sum()
+
+        vol_ret = ret * vol_percent
+        vol_ret_sum = vol_ret.rolling(window).sum()
+
+        return vol_ret_sum.max() - vol_ret_sum.min()
     
     return df.groupby(level='Date').progress_apply(_long_short_return)
 
